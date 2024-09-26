@@ -46,7 +46,8 @@ export const loginController = async (req, res) => {
     res.send("Login route")
 }
 export const logoutController = async (req, res) => {
-    res.send("Logout route")
+    res.clearCookie("token");
+    res.status(200).json({ success: true, message: "Logged out successfully" })
 }
 
 export const verifyEmailController = async (req, res) => {
