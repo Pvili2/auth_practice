@@ -2,7 +2,7 @@ import bcryptjs from "bcryptjs";
 import crypto from "crypto";
 import { User } from '../models/User.js';
 import { generateVerficationCode, generateTokenAndSetCookie } from "../utils/utils.js";
-import { sendVerificationEmail, sendWelcomeEmail, sendForgotPasswordEmail } from "../mailtrap/emails.js";
+import { sendVerificationEmail, sendWelcomeEmail, sendForgotPasswordEmail, sendSuccessPasswordChangeEmail } from "../mailtrap/emails.js";
 export const signupController = async (req, res) => {
     const { email, password, name } = req.body;
     try {
@@ -126,5 +126,35 @@ export const forgotPasswordController = async (req, res) => {
 
     } catch (error) {
         res.status(400).json({ success: false, message: "Failed to send forgot password email. Error: " + error.message });
+    }
+}
+
+export const resetPasswordController = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpiresAt: { $gt: Date.now() } });
+
+    if (!user) {
+        return res.status(404).json({ success: false, message: "Invalid or expired reset token", });
+    }
+
+    //update password
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
+    await user.save();
+
+    //send success email
+    await sendSuccessPasswordChangeEmail(user.email);
+
+    res.status(200).json({ success: true, message: "Password changed!", user: { ...user._doc, password: undefined } });
+
+    try {
+
+    } catch (error) {
+        res.status(400).json({ success: false, message: "Failed to change password. Error: " + error.message });
     }
 }
