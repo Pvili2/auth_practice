@@ -1,0 +1,38 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore environment files
+.env
+
+# Ignore node_modules and other dependencies
+node_modules/
+bower_components/
+
+# Ignore build output
+dist/
+build/
+out/
+*.class
+*.o
+*.so
+*.dll
+*.exe
+
+# Ignore IDE/project files
+.vscode/
+.idea/
+*.iml
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.bak
+*.pid
+*.seed
+*.orig
