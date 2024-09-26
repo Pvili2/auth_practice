@@ -43,7 +43,31 @@ export const signupController = async (req, res) => {
     }
 }
 export const loginController = async (req, res) => {
-    res.send("Login route")
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Email address not found" });
+        }
+
+        const isPasswordValid = await bcryptjs.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(404).json({ success: false, message: "Password is not correct" });
+        }
+        //setup token cookie
+        generateTokenAndSetCookie(res, user._id);
+
+        //update our last login
+        user.lastLogin = new Date();
+        await user.save();
+
+        return res.status(200).json({ success: true, message: "Logged in successfully" });
+    } catch (error) {
+        return res.status(400).json({ success: false, message: "Failed to login. Error: " + error.message });
+    }
 }
 export const logoutController = async (req, res) => {
     res.clearCookie("token");
