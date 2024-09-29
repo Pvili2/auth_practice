@@ -15,3 +15,18 @@ export interface InputProps
 }
 
 export type CustomInputEvent = React.ChangeEvent<HTMLInputElement>;
+
+export type PasswordCheckProps = { password: string };
+export type PasswordLengthStrength =
+  | "Very Weak"
+  | "Weak"
+  | "Fair"
+  | "Good"
+  | "Strong";
+
+export type PasswordStrengthColor =
+  | "bg-red-500"
+  | "bg-red-400"
+  | "bg-yellow-500"
+  | "bg-yellow-400"
+  | "bg-green-500";
