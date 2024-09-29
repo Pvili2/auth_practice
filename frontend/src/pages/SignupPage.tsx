@@ -3,13 +3,13 @@ import { FormEvent, useState } from "react";
 import Input from "../components/Input";
 import { Lock, Mail, User } from "lucide-react";
 import { CustomInputEvent } from "../types";
-import { Link } from "react-router-dom";
+import FormFooter from "../components/FormFooter";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
+import FormButton from "../components/FormButton";
 const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleSignup = (e: FormEvent) => {
     e.preventDefault();
   };
@@ -51,27 +51,16 @@ const SignupPage = () => {
             onChange={(e: CustomInputEvent) => setPassword(e.target.value)}
           />
           <PasswordStrengthMeter password={password} />
-          <motion.button
-            className="mt-5 w-full py-3 px-4 bg-gradient-to-r
-           from-green-500 to-emerald-600 text-white font-bold
-            rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:ring-green-500
-            focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-          >
-            Sign Up
-          </motion.button>
+          <div className="mt-6">
+            <FormButton content="Sign Up" />
+          </div>
         </form>
       </div>
-      <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
-        <p className="text-sm text-gray-400">
-          Already have an account?{" "}
-          <Link className="text-green-400 hover:underline" to={"/login"}>
-            Login
-          </Link>
-        </p>
-      </div>
+      <FormFooter
+        question={`Already have an account?`}
+        path="/login"
+        linkContent="Login"
+      />
     </motion.div>
   );
 };

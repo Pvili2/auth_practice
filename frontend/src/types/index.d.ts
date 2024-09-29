@@ -30,3 +30,8 @@ export type PasswordStrengthColor =
   | "bg-yellow-500"
   | "bg-yellow-400"
   | "bg-green-500";
+export type FormFooterProps = {
+  question: string;
+  path: string;
+  linkContent: string;
+};
