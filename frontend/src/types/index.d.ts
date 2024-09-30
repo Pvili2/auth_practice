@@ -1,6 +1,11 @@
 import React from "react";
 import { LucideIcon } from "lucide-react";
 
+export interface SignupInfo {
+  email: string;
+  password: string;
+  name: string;
+}
 export interface FloatingShapeProps {
   color: string;
   size: string;

@@ -6,12 +6,23 @@ import { CustomInputEvent } from "../types";
 import FormFooter from "../components/FormFooter";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import FormButton from "../components/FormButton";
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSignup = (e: FormEvent) => {
+  const navigate = useNavigate();
+  const { signup, error, isLoading }: any = useAuthStore();
+  const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
+
+    try {
+      await signup({ email, password, name });
+      navigate("/verify-email");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <motion.div
@@ -50,9 +61,10 @@ const SignupPage = () => {
             value={password}
             onChange={(e: CustomInputEvent) => setPassword(e.target.value)}
           />
+          {error && <p className="text-red-500 font-semibold mt-2">{error}</p>}
           <PasswordStrengthMeter password={password} />
           <div className="mt-6">
-            <FormButton content="Sign Up" />
+            <FormButton content="Sign Up" isLoading={isLoading} />
           </div>
         </form>
       </div>

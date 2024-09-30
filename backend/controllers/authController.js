@@ -5,6 +5,7 @@ import { generateVerficationCode, generateTokenAndSetCookie } from "../utils/uti
 import { sendVerificationEmail, sendWelcomeEmail, sendForgotPasswordEmail, sendSuccessPasswordChangeEmail } from "../mailtrap/emails.js";
 export const signupController = async (req, res) => {
     const { email, password, name } = req.body;
+
     try {
         if (!email || !password || !name) {
             throw new Error('All field is required');
