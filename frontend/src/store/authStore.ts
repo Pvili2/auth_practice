@@ -1,20 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
-import { CustomAxiosError, SignupInfo, User } from "../types";
+import { CustomAxiosError, SignupInfo, AuthState } from "../types";
 
 // API endpoint változó
 const API_URL = "http://localhost:5000/api/auth";
-
-// Definiáljuk a useAuthStore állapotának típusát
-type AuthState = {
-  user: User | null; // vagy definiálhatsz pontosabb típust a user-hez
-  isAuthenticated: boolean;
-  error: string | null;
-  isLoading: boolean;
-  isCheckingAuth: boolean;
-  signup: (data: SignupInfo) => Promise<void>;
-  verifyEmail: (code: string) => Promise<void>;
-};
 
 // Zustand store
 export const useAuthStore = create<AuthState>((set) => ({
@@ -49,7 +38,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  // Aszinkron verifyEmail függvény
   verifyEmail: async (code: string) => {
     set({ isLoading: true });
     try {

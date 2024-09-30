@@ -44,12 +44,23 @@ export type FormFooterProps = {
 export type CustomAxiosError = AxiosError<{ message: string }>;
 export type VerifyEmailCall = {
   isLoading: boolean;
-  verifyEmail: (code: string) => Promise<void>; // Példa függvény, ha async és stringet vár
+  verifyEmail: (code: string) => Promise<void>;
   error: string | null;
 };
+
+export type AuthState = {
+  user: User | null;
+  isAuthenticated: boolean;
+  error: string | null;
+  isLoading: boolean;
+  isCheckingAuth: boolean;
+  signup: (data: SignupInfo) => Promise<void>;
+  verifyEmail: (code: string) => Promise<void>;
+};
+
 export type SignupCall = {
   isLoading: boolean;
-  signup: ({ email, password, name }: SignupInfo) => Promise<void>; // Példa függvény, ha async és stringet vár
+  signup: ({ email, password, name }: SignupInfo) => Promise<void>;
   error: string | null;
 };
 export type User = {
