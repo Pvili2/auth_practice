@@ -3,11 +3,15 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { CustomInputEvent } from "../types";
 import FormButton from "../components/FormButton";
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { VerifyEmailCall } from "../types";
 const VerifyEmail = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<HTMLInputElement[]>([]);
+  const navigate = useNavigate();
   //const navigate = useNavigate();
-  const isLoading = false;
+  const { isLoading, verifyEmail, error }: VerifyEmailCall = useAuthStore();
   function handleChange(index: number, value: string): void {
     const seged = [...code];
 
@@ -44,10 +48,15 @@ const VerifyEmail = () => {
     }
   }
 
-  const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
     const verificationCode = code.join("");
-    alert(`Verification code submited: ${verificationCode}`);
+    try {
+      await verifyEmail(verificationCode);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   //auto submit
   useEffect(() => {
@@ -96,6 +105,7 @@ const VerifyEmail = () => {
               />
             ))}
           </div>
+          {error && <p className="text-red-500 mt-2 font-semibold">{error}</p>}
           <FormButton
             content="Verify Email"
             isLoading={isLoading && code.some((digit) => !digit)}

@@ -1,6 +1,6 @@
 import React from "react";
 import { LucideIcon } from "lucide-react";
-
+import { AxiosError } from "axios";
 export interface SignupInfo {
   email: string;
   password: string;
@@ -39,4 +39,23 @@ export type FormFooterProps = {
   question: string;
   path: string;
   linkContent: string;
+};
+
+export type CustomAxiosError = AxiosError<{ message: string }>;
+export type VerifyEmailCall = {
+  isLoading: boolean;
+  verifyEmail: (code: string) => Promise<void>; // Példa függvény, ha async és stringet vár
+  error: string | null;
+};
+export type SignupCall = {
+  isLoading: boolean;
+  signup: ({ email, password, name }: SignupInfo) => Promise<void>; // Példa függvény, ha async és stringet vár
+  error: string | null;
+};
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt?: string;
+  updatedAt?: string;
 };

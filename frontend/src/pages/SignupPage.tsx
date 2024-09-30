@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { FormEvent, useState } from "react";
 import Input from "../components/Input";
 import { Lock, Mail, User } from "lucide-react";
-import { CustomInputEvent } from "../types";
+import { CustomInputEvent, SignupCall } from "../types";
 import FormFooter from "../components/FormFooter";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import FormButton from "../components/FormButton";
@@ -13,7 +13,7 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { signup, error, isLoading }: any = useAuthStore();
+  const { signup, error, isLoading }: SignupCall = useAuthStore();
   const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -61,7 +61,7 @@ const SignupPage = () => {
             value={password}
             onChange={(e: CustomInputEvent) => setPassword(e.target.value)}
           />
-          {error && <p className="text-red-500 font-semibold mt-2">{error}</p>}
+          {error && <p className="text-red-500 mt-2 font-semibold">{error}</p>}
           <PasswordStrengthMeter password={password} />
           <div className="mt-6">
             <FormButton content="Sign Up" isLoading={isLoading} />

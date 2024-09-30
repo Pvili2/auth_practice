@@ -1,15 +1,30 @@
 import { create } from "zustand";
 import axios from "axios";
-import { SignupInfo } from "../types";
+import { CustomAxiosError, SignupInfo, User } from "../types";
 
+// API endpoint változó
 const API_URL = "http://localhost:5000/api/auth";
-export const useAuthStore = create((set) => ({
+
+// Definiáljuk a useAuthStore állapotának típusát
+type AuthState = {
+  user: User | null; // vagy definiálhatsz pontosabb típust a user-hez
+  isAuthenticated: boolean;
+  error: string | null;
+  isLoading: boolean;
+  isCheckingAuth: boolean;
+  signup: (data: SignupInfo) => Promise<void>;
+  verifyEmail: (code: string) => Promise<void>;
+};
+
+// Zustand store
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   error: null,
   isLoading: false,
   isCheckingAuth: true,
-  //functions
+
+  // Aszinkron signup függvény
   signup: async ({ email, password, name }: SignupInfo) => {
     console.log(email);
     set({ isLoading: true, error: null });
@@ -25,8 +40,27 @@ export const useAuthStore = create((set) => ({
         isLoading: false,
       });
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      const axiosError = error as CustomAxiosError;
+      set({
+        error: axiosError.response?.data?.message || "Unknown error",
+        isLoading: false,
+      });
       throw error;
+    }
+  },
+
+  // Aszinkron verifyEmail függvény
+  verifyEmail: async (code: string) => {
+    set({ isLoading: true });
+    try {
+      await axios.post(`${API_URL}/verify-email`, { code });
+      set({ isLoading: false });
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      set({
+        error: axiosError.response?.data?.message || "Unknown error",
+        isLoading: false,
+      });
     }
   },
 }));
