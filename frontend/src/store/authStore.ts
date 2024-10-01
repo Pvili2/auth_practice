@@ -55,14 +55,41 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async ({ email, password }: LoginData) => {
     set({ isLoading: true });
     try {
-      await axios.post(`${API_URL}/login`, { email, password });
-      set({ isLoading: false });
+      const response = await axios.post(
+        `${API_URL}/login`,
+        { email, password },
+        { withCredentials: true }
+      );
+      set({
+        isLoading: false,
+        user: response.data.user,
+        isAuthenticated: true,
+      });
     } catch (error) {
       const axiosError = error as CustomAxiosError;
 
       set({
         isLoading: false,
         error: axiosError.response?.data.message || "Unknown Error",
+      });
+    }
+  },
+  checkAuth: async () => {
+    set({ isCheckingAuth: true, error: null });
+    try {
+      const response = await axios.get(`${API_URL}/check-auth`, {
+        withCredentials: true,
+      });
+      set({
+        user: response.data.user,
+        isAuthenticated: true,
+        isCheckingAuth: false,
+      });
+    } catch (error) {
+      set({
+        isCheckingAuth: false,
+        error: (error as Error).message,
+        isAuthenticated: false,
       });
     }
   },

@@ -35,7 +35,7 @@ export const signupController = async (req, res) => {
         generateTokenAndSetCookie(res, user._id);
 
         //send verification email
-        await sendVerificationEmail(user.email, verificationCode);
+        const token = await sendVerificationEmail(user.email, verificationCode);
         //send a response
         res.status(201).json({
             success: true, message: "User created successfully", user: { ...user._doc, password: null }
@@ -49,9 +49,7 @@ export const loginController = async (req, res) => {
     console.log(email, password);
     try {
         const user = await User.findOne({ email });
-        console.log(user)
         if (!user) {
-            console.log("hello")
             return res.status(404).json({ success: false, message: "Email address not found" });
         }
 
@@ -60,14 +58,14 @@ export const loginController = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(404).json({ success: false, message: "Password is not correct" });
         }
-        //setup token cookie
-        generateTokenAndSetCookie(res, user._id);
 
+        //setup token cookie
+        const token = generateTokenAndSetCookie(res, user._id);
         //update our last login
         user.lastLogin = new Date();
         await user.save();
 
-        return res.status(200).json({ success: true, message: "Logged in successfully" });
+        return res.status(200).json({ success: true, message: "Logged in successfully", user: { ...user._doc, password: null } });
     } catch (error) {
         return res.status(400).json({ success: false, message: "Failed to login. Error: " + error.message });
     }

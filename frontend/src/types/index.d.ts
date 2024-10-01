@@ -57,6 +57,7 @@ export type AuthState = {
   signup: (data: SignupInfo) => Promise<void>;
   verifyEmail: (code: string) => Promise<void>;
   login: ({ email, password }: UserData) => Promise<void>;
+  checkAuth: () => Promise<void>;
 };
 
 export type SignupCall = {
@@ -71,11 +72,16 @@ export type LoginCall = {
   login: ({ email, password }: LoginData) => Promise<void>;
 };
 export type User = {
-  id: string;
-  name: string;
+  _id: string;
   email: string;
-  createdAt?: string;
-  updatedAt?: string;
+  password: string;
+  name: string;
+  isVerified: boolean;
+  lastLogin: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  [key: string]: any;
 };
 
 export type LoginData = {

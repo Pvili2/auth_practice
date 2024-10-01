@@ -12,7 +12,10 @@ const app = express();
 //middlewares
 app.use(express.json()); //allow us to use req.body
 app.use(cookieParser()) // allow us to parse incoming cookies
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
 const PORT = process.env.PORT || 5000;
 //implement routes
 app.use("/api/auth", authRoutes)

@@ -1,9 +1,49 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import FloatingShape from "./components/FloatingShape";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import VerifyEmail from "./pages/VerifyEmail";
+import { useAuthStore } from "./store/authStore";
+import { useEffect } from "react";
+
+//protect protected routes
+const RedirectUnAuthenticatedUser = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { isAuthenticated, user } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user?.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+
+  return children;
+};
+//redirect logged in users
+const RedirectAuthenticatedUser = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { isAuthenticated, user } = useAuthStore();
+  if (isAuthenticated && user?.isVerified) {
+    return <Navigate to="/" replace />;
+  } else {
+    return children;
+  }
+};
 function App() {
+  const { checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   return (
     <div
       className="min-h-screen bg-gradient-to-br 
@@ -32,10 +72,36 @@ function App() {
       />
 
       <Routes>
-        <Route path="/" element={"Home"} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route
+          path="/"
+          element={
+            <RedirectUnAuthenticatedUser>{"Home"}</RedirectUnAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <RedirectAuthenticatedUser>
+              <SignupPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticatedUser>
+              <LoginPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={
+            <RedirectAuthenticatedUser>
+              <VerifyEmail />
+            </RedirectAuthenticatedUser>
+          }
+        />
       </Routes>
     </div>
   );
