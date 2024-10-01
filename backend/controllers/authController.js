@@ -46,11 +46,12 @@ export const signupController = async (req, res) => {
 }
 export const loginController = async (req, res) => {
     const { email, password } = req.body;
-
+    console.log(email, password);
     try {
         const user = await User.findOne({ email });
-
+        console.log(user)
         if (!user) {
+            console.log("hello")
             return res.status(404).json({ success: false, message: "Email address not found" });
         }
 

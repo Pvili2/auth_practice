@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { CustomAxiosError, SignupInfo, AuthState } from "../types";
+import { CustomAxiosError, SignupInfo, AuthState, LoginData } from "../types";
 
 // API endpoint változó
 const API_URL = "http://localhost:5000/api/auth";
@@ -48,6 +48,21 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({
         error: axiosError.response?.data?.message || "Unknown error",
         isLoading: false,
+      });
+    }
+  },
+
+  login: async ({ email, password }: LoginData) => {
+    set({ isLoading: true });
+    try {
+      await axios.post(`${API_URL}/login`, { email, password });
+      set({ isLoading: false });
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+
+      set({
+        isLoading: false,
+        error: axiosError.response?.data.message || "Unknown Error",
       });
     }
   },

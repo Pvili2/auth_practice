@@ -4,7 +4,7 @@ import {
   PasswordLengthStrength,
   PasswordStrengthColor,
 } from "../types";
-
+import { motion } from "framer-motion";
 export const PasswordCriteria = ({ password }: PasswordCheckProps) => {
   const criteria = [
     { label: "At least 6 characters", met: password.length >= 6 },
@@ -63,7 +63,7 @@ const PasswordStrengthMeter = ({ password }: PasswordCheckProps) => {
       </div>
       <div className="flex space-x-1">
         {[...Array(4)].map((_, index) => (
-          <div
+          <motion.div
             key={index}
             className={`h-1 w-1/4 rounded-full transition-colors duration-700
                 ${

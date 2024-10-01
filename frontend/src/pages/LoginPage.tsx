@@ -1,18 +1,29 @@
 import { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
-import { CustomInputEvent } from "../types";
+import { CustomInputEvent, LoginCall } from "../types";
 import FormButton from "../components/FormButton";
 import FormFooter from "../components/FormFooter";
+import { useAuthStore } from "../store/authStore";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const isLoading = false;
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const { isLoading, error, login }: LoginCall = useAuthStore();
+  const navigate = useNavigate();
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(email, password);
+    try {
+      await login({ email, password });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  console.log(password);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -47,6 +58,7 @@ const LoginPage = () => {
               Forgot Password?
             </Link>
           </div>
+          {error && <p className="text-red-500 mt-2 font-semibold">{error}</p>}
           <FormButton content="Login" isLoading={isLoading} />
         </form>
       </div>
