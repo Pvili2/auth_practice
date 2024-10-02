@@ -46,7 +46,6 @@ export const signupController = async (req, res) => {
 }
 export const loginController = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email, password);
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -71,7 +70,8 @@ export const loginController = async (req, res) => {
     }
 }
 export const logoutController = async (req, res) => {
-    res.clearCookie("token");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    res.clearCookie("token", { sameSite: "lax", secure: false });
     res.status(200).json({ success: true, message: "Logged out successfully" })
 }
 
@@ -160,6 +160,7 @@ export const resetPasswordController = async (req, res) => {
 }
 
 export const checkAuthController = async (req, res) => {
+    //await new Promise((resolve) => setTimeout(resolve, 500))
     try {
         const user = await User.findById(req.userId);
         console.log(req.userId);

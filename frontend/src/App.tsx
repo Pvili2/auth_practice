@@ -1,11 +1,12 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "./store/authStore";
+import { useEffect } from "react";
 import FloatingShape from "./components/FloatingShape";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import VerifyEmail from "./pages/VerifyEmail";
-import { useAuthStore } from "./store/authStore";
-import { useEffect } from "react";
-
+import LoadingSpinner from "./components/LoadingSpinner";
+import DashboardPage from "./pages/DashboardPage";
 //protect protected routes
 const RedirectUnAuthenticatedUser = ({
   children,
@@ -38,11 +39,13 @@ const RedirectAuthenticatedUser = ({
   }
 };
 function App() {
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  if (isCheckingAuth) return <LoadingSpinner />;
 
   return (
     <div
@@ -75,7 +78,9 @@ function App() {
         <Route
           path="/"
           element={
-            <RedirectUnAuthenticatedUser>{"Home"}</RedirectUnAuthenticatedUser>
+            <RedirectUnAuthenticatedUser>
+              <DashboardPage />
+            </RedirectUnAuthenticatedUser>
           }
         />
         <Route

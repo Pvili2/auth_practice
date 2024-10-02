@@ -58,6 +58,7 @@ export type AuthState = {
   verifyEmail: (code: string) => Promise<void>;
   login: ({ email, password }: UserData) => Promise<void>;
   checkAuth: () => Promise<void>;
+  logout: () => void;
 };
 
 export type SignupCall = {

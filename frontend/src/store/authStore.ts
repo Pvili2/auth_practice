@@ -15,7 +15,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   // Aszinkron signup függvény
   signup: async ({ email, password, name }: SignupInfo) => {
-    console.log(email);
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/signup`, {
@@ -91,6 +90,16 @@ export const useAuthStore = create<AuthState>((set) => ({
         error: (error as Error).message,
         isAuthenticated: false,
       });
+    }
+  },
+  logout: async () => {
+    set({ isLoading: false });
+    try {
+      await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+      set({ isLoading: false, isAuthenticated: false, user: null });
+    } catch (error) {
+      const errorMessage = error as CustomAxiosError;
+      set({ error: errorMessage.response?.data.message, isLoading: false });
     }
   },
 }));
