@@ -13,7 +13,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: false,
   isCheckingAuth: true,
 
-  // Aszinkron signup függvény
   signup: async ({ email, password, name }: SignupInfo) => {
     set({ isLoading: true, error: null });
     try {
@@ -87,7 +86,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       set({
         isCheckingAuth: false,
-        error: (error as Error).message,
         isAuthenticated: false,
       });
     }
@@ -100,6 +98,36 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       const errorMessage = error as CustomAxiosError;
       set({ error: errorMessage.response?.data.message, isLoading: false });
+    }
+  },
+  forgotPassword: async (email: string) => {
+    set({ isLoading: false, error: null });
+    try {
+      await axios.post(
+        `${API_URL}/forgot-password`,
+        { email },
+        { withCredentials: true }
+      );
+
+      set({ isLoading: false });
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      set({ error: axiosError.response?.data.message, isLoading: false });
+    }
+  },
+  resetPassword: async (password: string, token: string | undefined) => {
+    set({ isLoading: true, error: null });
+    try {
+      await axios.post(
+        `${API_URL}/reset-password/${token}`,
+        { password },
+        { withCredentials: true }
+      );
+
+      set({ isLoading: false });
+    } catch (error) {
+      const axiosError = error as CustomAxiosError;
+      set({ error: axiosError.response?.data.message, isLoading: false });
     }
   },
 }));

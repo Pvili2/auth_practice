@@ -7,6 +7,8 @@ import LoginPage from "./pages/LoginPage";
 import VerifyEmail from "./pages/VerifyEmail";
 import LoadingSpinner from "./components/LoadingSpinner";
 import DashboardPage from "./pages/DashboardPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 //protect protected routes
 const RedirectUnAuthenticatedUser = ({
   children,
@@ -32,6 +34,7 @@ const RedirectAuthenticatedUser = ({
   children: React.ReactNode;
 }) => {
   const { isAuthenticated, user } = useAuthStore();
+
   if (isAuthenticated && user?.isVerified) {
     return <Navigate to="/" replace />;
   } else {
@@ -102,8 +105,24 @@ function App() {
         <Route
           path="/verify-email"
           element={
-            <RedirectAuthenticatedUser>
+            <RedirectUnAuthenticatedUser>
               <VerifyEmail />
+            </RedirectUnAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <RedirectAuthenticatedUser>
+              <ForgotPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/reset-password/:token"
+          element={
+            <RedirectAuthenticatedUser>
+              <ResetPasswordPage />
             </RedirectAuthenticatedUser>
           }
         />

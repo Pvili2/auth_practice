@@ -113,7 +113,7 @@ export const forgotPasswordController = async (req, res) => {
         }
         //generate password reset token
         const resetToken = crypto.randomBytes(20).toString("hex");
-        const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
+        const resetTokenExpiresAt = Date.now() + 3 * 60 * 60 * 1000;
 
         user.resetPasswordToken = resetToken;
         user.resetPasswordExpiresAt = resetTokenExpiresAt;
@@ -132,7 +132,6 @@ export const forgotPasswordController = async (req, res) => {
 export const resetPasswordController = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
-
     const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpiresAt: { $gt: Date.now() } });
 
     if (!user) {

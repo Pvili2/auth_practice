@@ -59,6 +59,8 @@ export type AuthState = {
   login: ({ email, password }: UserData) => Promise<void>;
   checkAuth: () => Promise<void>;
   logout: () => void;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (password: string, token: string | undefined) => Promise<void>;
 };
 
 export type SignupCall = {
