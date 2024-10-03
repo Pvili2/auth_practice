@@ -8,6 +8,7 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import FormButton from "../components/FormButton";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import FormTitle from "../components/FormTitle";
 const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,9 +36,7 @@ const SignupPage = () => {
       className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden"
     >
       <div className="p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
-          Create Account
-        </h2>
+        <FormTitle content="Create Account" />
 
         <form onSubmit={handleSignup}>
           <Input

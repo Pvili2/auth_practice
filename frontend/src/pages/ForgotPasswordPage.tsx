@@ -6,6 +6,7 @@ import { CustomInputEvent } from "../types";
 import FormButton from "../components/FormButton";
 import FormFooter from "../components/FormFooter";
 import { useAuthStore } from "../store/authStore";
+import FormTitle from "../components/FormTitle";
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -28,9 +29,7 @@ const ForgotPasswordPage = () => {
       className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden"
     >
       <div className="p-8">
-        <h2 className="h-10 text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
-          Forgot Password
-        </h2>
+        <FormTitle content="Forgot Password" />
         {isSubmitted ? (
           <div>
             <div className=" mx-auto size-14 p-1 bg-emerald-500 rounded-full text-white flex justify-center items-center">
